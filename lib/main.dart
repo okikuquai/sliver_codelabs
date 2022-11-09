@@ -42,35 +42,34 @@ class WeeklyForecastList extends StatelessWidget {
   Widget build(BuildContext context) {
     final DateTime currentDate = DateTime.now();
     final TextTheme textTheme = Theme.of(context).textTheme;
-    final List<DailyForecast> forecasts = Server.getDailyForecastList();
 
     // TODO: Let's make this a more efficient Scrollable before we
     //  add more widgets.
 
-    //singlechildscrollviewを使用してスクロール動作を実装している
-    //シンプルにスクロールの実装ができる
-    return SingleChildScrollView(
-      child: Column(
-        children: forecasts.map((dailyForecast) {
-          return Card(
-            child: ListTile(
-              leading: Text(
-                dailyForecast.getDate(currentDate.day).toString(),
-                style: textTheme.headline4,
-              ),
-              title: Text(
-                dailyForecast.getWeekday(currentDate.weekday),
-                style: textTheme.headline5,
-              ),
-              subtitle: Text(dailyForecast.description),
-              trailing: Text(
-                '${dailyForecast.highTemp} | ${dailyForecast.lowTemp} F',
-                style: textTheme.subtitle2,
-              ),
+    // This Scrollable will lazily load widgets as they come into view.
+    // SingleChildScrollView → ListViewに変更
+    return ListView.builder(
+      itemCount: 7,
+      itemBuilder: (context, index) {
+        final DailyForecast dailyForecast = Server.getDailyForecastByID(index);
+        return Card(
+          child: ListTile(
+            leading: Text(
+              dailyForecast.getDate(currentDate.day).toString(),
+              style: textTheme.headline4,
             ),
-          );
-        }).toList(),
-      ),
+            title: Text(
+              dailyForecast.getWeekday(currentDate.weekday),
+              style: textTheme.headline5,
+            ),
+            subtitle: Text(dailyForecast.description),
+            trailing: Text(
+              '${dailyForecast.highTemp} | ${dailyForecast.lowTemp} F',
+              style: textTheme.subtitle2,
+            ),
+          ),
+        );
+      },
     );
   }
 }
