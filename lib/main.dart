@@ -21,7 +21,7 @@ class HorizonsApp extends StatelessWidget {
       // experience is the same for everyone - regardless of the
       // platform they are using.
 
-      //スクロールの動作設定？
+      //スクロールの動作設定(複数プラットフォームで同じ動作にするため)
       scrollBehavior: const ConstantScrollBehavior(),
       title: 'Horizons Weather',
       home: Scaffold(
@@ -46,6 +46,9 @@ class WeeklyForecastList extends StatelessWidget {
 
     // TODO: Let's make this a more efficient Scrollable before we
     //  add more widgets.
+
+    //singlechildscrollviewを使用してスクロール動作を実装している
+    //シンプルにスクロールの実装ができる
     return SingleChildScrollView(
       child: Column(
         children: forecasts.map((dailyForecast) {
