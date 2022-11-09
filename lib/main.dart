@@ -20,8 +20,6 @@ class HorizonsApp extends StatelessWidget {
       // workshop, we're using a custom ScrollBehavior so that the
       // experience is the same for everyone - regardless of the
       // platform they are using.
-
-      //スクロールの動作設定(複数プラットフォームで同じ動作にするため)
       scrollBehavior: const ConstantScrollBehavior(),
       title: 'Horizons Weather',
       home: Scaffold(
@@ -43,30 +41,67 @@ class WeeklyForecastList extends StatelessWidget {
     final DateTime currentDate = DateTime.now();
     final TextTheme textTheme = Theme.of(context).textTheme;
 
-    // TODO: Let's make this a more efficient Scrollable before we
-    //  add more widgets.
-
-    // This Scrollable will lazily load widgets as they come into view.
-    // SingleChildScrollView → ListViewに変更
     return ListView.builder(
       itemCount: 7,
       itemBuilder: (context, index) {
         final DailyForecast dailyForecast = Server.getDailyForecastByID(index);
         return Card(
-          child: ListTile(
-            leading: Text(
-              dailyForecast.getDate(currentDate.day).toString(),
-              style: textTheme.headline4,
-            ),
-            title: Text(
-              dailyForecast.getWeekday(currentDate.weekday),
-              style: textTheme.headline5,
-            ),
-            subtitle: Text(dailyForecast.description),
-            trailing: Text(
-              '${dailyForecast.highTemp} | ${dailyForecast.lowTemp} F',
-              style: textTheme.subtitle2,
-            ),
+          child: Row(
+            children: <Widget>[
+              SizedBox(
+                height: 200.0,
+                width: 200.0,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: <Widget>[
+                    DecoratedBox(
+                      position: DecorationPosition.foreground,
+                      decoration: BoxDecoration(
+                        gradient: RadialGradient(
+                          colors: <Color>[
+                            Colors.grey[800]!,
+                            Colors.transparent
+                          ],
+                        ),
+                      ),
+                      child: Image.network(
+                        dailyForecast.imageId,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Center(
+                      child: Text(
+                        dailyForecast.getDate(currentDate.day).toString(),
+                        style: textTheme.headline2,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        dailyForecast.getWeekday(currentDate.weekday),
+                        style: textTheme.headline4,
+                      ),
+                      const SizedBox(height: 10.0),
+                      Text(dailyForecast.description),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  '${dailyForecast.highTemp} | ${dailyForecast.lowTemp} F',
+                  style: textTheme.subtitle1,
+                ),
+              ),
+            ],
           ),
         );
       },
@@ -152,6 +187,7 @@ class DailyForecast {
     required this.lowTemp,
     required this.description,
   });
+
   final int id;
   final String imageId;
   final int highTemp;
@@ -191,7 +227,7 @@ class ConstantScrollBehavior extends ScrollBehavior {
       child;
 
   @override
-  TargetPlatform getPlatform(BuildContext context) => TargetPlatform.macOS;
+  TargetPlatform getPlatform(BuildContext context) => TargetPlatform.android;
 
   @override
   ScrollPhysics getScrollPhysics(BuildContext context) =>
