@@ -41,6 +41,7 @@ class WeeklyForecastList extends StatelessWidget {
     final DateTime currentDate = DateTime.now();
     final TextTheme textTheme = Theme.of(context).textTheme;
 
+    //listview
     return ListView.builder(
       itemCount: 7,
       itemBuilder: (context, index) {
@@ -48,6 +49,7 @@ class WeeklyForecastList extends StatelessWidget {
         return Card(
           child: Row(
             children: <Widget>[
+              //画像
               SizedBox(
                 height: 200.0,
                 width: 200.0,
@@ -78,6 +80,7 @@ class WeeklyForecastList extends StatelessWidget {
                   ],
                 ),
               ),
+              //曜日とサブタイトル
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
@@ -94,6 +97,7 @@ class WeeklyForecastList extends StatelessWidget {
                   ),
                 ),
               ),
+              //気温
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(

@@ -344,6 +344,5 @@ fabric.properties
 # macos, windows, web, linuixも管理対象から外す
 macos
 windows
-web
 linux
 ios
