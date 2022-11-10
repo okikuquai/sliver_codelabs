@@ -29,12 +29,45 @@ class HorizonsApp extends StatelessWidget {
             SliverAppBar(
               //pinnedをtrueにすることでヘッダーを完全に隠さなくする｀
               pinned: true,
+
               //floatingをtrueにすることで上方向にスクロールした際に場所に関係なくappbarの大きさが変わる
               // floating: true,
               // snap: true,
-              title: const Text('Horizons'),
+              stretch: true,
+              //　一番下までスクロールし切ったタイミングで呼び出されるコールバック
+              onStretchTrigger: () async {
+                print('Load new data!');
+                //await Server.requestNewData();
+              },
+
+              //title: const Text('Horizons'),
               backgroundColor: Colors.teal[800],
               expandedHeight: 200.0,
+
+              //flexiblespacebarでヘッダーの画像（スクロールによって表示が変わる）を設定している
+              //flexiblespaceの方でtitleを設定
+              flexibleSpace: FlexibleSpaceBar(
+                stretchModes: <StretchMode>[
+                  StretchMode.zoomBackground,
+                  StretchMode.fadeTitle,
+                  StretchMode.blurBackground,
+                ],
+                title: const Text('Horizons'),
+                background: DecoratedBox(
+                  position: DecorationPosition.foreground,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.center,
+                      colors: <Color>[Colors.teal[800]!, Colors.transparent],
+                    ),
+                  ),
+                  child: Image.network(
+                    headerImage,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
             ),
             WeeklyForecastList(),
           ],
